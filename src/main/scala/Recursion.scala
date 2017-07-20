@@ -8,10 +8,6 @@ object Recursion {
   val blueBox = Image.rectangle(20, 20).fillColor(Color.royalBlue)
   val redBox = Image.rectangle(20, 20).fillColor(Color.indianRed)
   val circle = Image.circle(20).lineColor(Color.black).lineWidth(1)
-  val chessboardUnit = (Image.rectangle(15, 15).fillColor(Color.red) beside
-    Image.rectangle(15, 15).fillColor(Color.black)) above
-    (Image.rectangle(15, 15).fillColor(Color.black) beside
-      Image.rectangle(15, 15).fillColor(Color.red))
   val sierpinskiUnit = Image.triangle(15, 15).lineWidth(1).lineColor(Color.red) above
     (Image.triangle(15, 15).lineWidth(1).lineColor(Color.red) beside
       Image.triangle(15, 15).lineWidth(1).lineColor(Color.red))
@@ -39,10 +35,19 @@ object Recursion {
   }
 
   def chessboard(count: Int): Image = {
-    count match {
-      case 0 => chessboardUnit
-      case n => (chessboard(n - 1) beside chessboard(n - 1)) above (chessboard(n - 1) beside chessboard(n - 1))
+    val blackBox = Image.rectangle(20, 20).fillColor(Color.black)
+    val redBox = Image.rectangle(20, 20).fillColor(Color.red)
+    val chessboardUnit = (redBox beside blackBox) above (blackBox beside redBox)
+
+    def loop(count: Int): Image = {
+      count match {
+        case 0 => chessboardUnit
+        case n => val unit = loop(n-1)
+          (unit beside unit) above (unit beside unit)
+      }
     }
+
+    loop(count)
   }
 
   def sierpinski(count: Int): Image = {
@@ -102,7 +107,8 @@ object Recursion {
 //    cross(2).draw
 //    cross(3).draw
 //    chessboard(0).draw
-//    chessboard(1).draw
+    chessboard(1).draw
+    chessboard(2).draw
 //    sierpinski(1).draw
 //    sierpinski(2).draw
 //    sierpinski(5).draw
