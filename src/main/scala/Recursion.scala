@@ -112,6 +112,56 @@ object Recursion {
     }
   }
 
+  def circleAtCorners(): Image = {
+    val dot = Image.circle(5).lineWidth(3).lineColor(Color.crimson)
+    dot.at(0, 0).
+      on(dot.at(0, 100)).
+      on(dot.at(100, 100)).
+      on(dot.at(100, 0))
+  }
+
+  def parametricCircle(angle: Angle): Point =
+    Point.cartesian(angle.cos * 200, angle.sin * 200)
+
+//  def parametricCircle(angle: Angle): Point =
+//    Point.polar(200, angle)
+
+  def sample(start: Angle, samples: Int): Image = {
+    // Angle.one is one complete turn. I.e. 360 degrees
+    val step = Angle.one / samples
+    val dot = triangle(10, 10)
+    def loop(count: Int): Image = {
+      val angle = step * count
+      count match {
+        case 0 => Image.empty
+        case n =>
+          dot.at(parametricCircle(angle).toVec) on loop(n - 1)
+      }
+    }
+
+    loop(samples)
+  }
+
+  // Parametric equation for rose with k = 7
+  def rose(angle: Angle) =
+    Point.polar((angle * 7).cos * 200, angle)
+
+  def sampleRose(start: Angle, samples: Int): Image = {
+    // Angle.one is one complete turn. I.e. 360 degrees
+    val step = Angle.one / samples
+    val dot = Image.circle(2)
+    def loop(count: Int): Image = {
+      val angle = step * count
+      count match {
+        case 0 => Image.empty
+        case n =>
+          dot.at(rose(angle).toVec) on loop(n - 1)
+      }
+    }
+
+    loop(samples)
+  }
+
   def main(args: Array[String]): Unit = {
 //    blueBoxes(4).draw
 //    redBoxes(5).draw
@@ -132,6 +182,10 @@ object Recursion {
 //    gradientBoxes(Color.blue, 5).draw
 //    concentricCircles(3, 20).draw
 //    fadeCircles(10,20,Color.red).draw
-    boxes(10, Color.yellow).draw
+//    boxes(10, Color.yellow).draw
+//    circleAtCorners.draw
+//    sample(45.degrees, 4).draw
+//    sample(0.degrees, 72).draw
+    sampleRose(0.degrees, 200).draw
   }
 }
