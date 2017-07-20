@@ -5,8 +5,6 @@ import doodle.jvm.Java2DFrame._
 import doodle.backend.StandardInterpreter._
 
 object Recursion {
-  val blueBox = Image.rectangle(20, 20).fillColor(Color.royalBlue)
-  val redBox = Image.rectangle(20, 20).fillColor(Color.indianRed)
   val circle = Image.circle(20).lineColor(Color.black).lineWidth(1)
   val sierpinskiUnit = Image.triangle(15, 15).lineWidth(1).lineColor(Color.red) above
     (Image.triangle(15, 15).lineWidth(1).lineColor(Color.red) beside
@@ -14,17 +12,31 @@ object Recursion {
   val rectangle = Image.rectangle(20, 20)
 
   def blueBoxes(count: Int): Image = {
+    val box = Image.rectangle(20, 20)
     count match {
       case 0 => Image.empty
-      case n => blueBox above blueBoxes(n - 1)
+      case n => box.fillColor(Color.royalBlue) above blueBoxes(n - 1)
     }
   }
 
   def redBoxes(count: Int): Image = {
+    val box = Image.rectangle(20, 20)
     count match {
       case 0 => Image.empty
-      case n => redBox beside redBoxes(n - 1)
+      case n => box.fillColor(Color.indianRed) beside redBoxes(n - 1)
     }
+  }
+
+  def boxes(count: Int, color: Color): Image = {
+    val box = Image.rectangle(20, 20).fillColor(color)
+    def loop(count: Int): Image = {
+      count match {
+        case 0 => Image.empty
+        case n => box beside boxes(n - 1, color)
+      }
+    }
+
+    loop(count)
   }
 
   def cross(count: Int): Image = {
@@ -107,8 +119,8 @@ object Recursion {
 //    cross(2).draw
 //    cross(3).draw
 //    chessboard(0).draw
-    chessboard(1).draw
-    chessboard(2).draw
+//    chessboard(1).draw
+//    chessboard(2).draw
 //    sierpinski(1).draw
 //    sierpinski(2).draw
 //    sierpinski(5).draw
@@ -120,5 +132,6 @@ object Recursion {
 //    gradientBoxes(Color.blue, 5).draw
 //    concentricCircles(3, 20).draw
 //    fadeCircles(10,20,Color.red).draw
+    boxes(10, Color.yellow).draw
   }
 }
